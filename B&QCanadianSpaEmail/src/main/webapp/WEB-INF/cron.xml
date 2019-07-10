@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/rno</url>
+    <description>read new orders</description>
+     <schedule>every 30 minutes</schedule>
+    </cron>
+     <cron>
+    <url>/fu</url>
+    <description>find updates on orders</description>
+     <schedule>every 30 minutes</schedule>
+     </cron>
+ 
+</cronentries>
