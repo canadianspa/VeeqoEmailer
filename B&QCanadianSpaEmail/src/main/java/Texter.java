@@ -7,8 +7,8 @@ import com.twilio.type.PhoneNumber;
 
 public final class Texter {
 	
-	public static final String ACCOUNT_SID = "***REMOVED***";
-	 public static final String AUTH_TOKEN = "***REMOVED***";
+	public static final String ACCOUNT_SID = APIKEYS.twilioSid;
+	 public static final String AUTH_TOKEN = APIKEYS.twilioToken;
 
 	public static void orderRecieved(String name, String phone, LineItems li,Address a)
 	{

@@ -162,7 +162,7 @@ public class FindUpdates extends HttpServlet {
 
 	public Order idToClass(Long orderId)
 	{
-		String APIKEY = "***REMOVED***";
+		String APIKEY = APIKEYS.veeqoApi;
 
 		
 		Client client = ClientBuilder.newClient();

@@ -15,7 +15,7 @@ public final class Emailer {
 	
 	public static void orderRecieved(String name, String email, LineItems li, Address a)
 	{
-		String apikey = "***REMOVED***";
+		String apikey = APIKEYS.sendGridApi;
 		Email from = new Email("noreply@canadianspacompany.com");
 		String subject = "";
 		Email to = new Email(email);

@@ -74,7 +74,7 @@ public class ReadNewOrders extends HttpServlet {
 
 		Settings s = ObjectifyService.ofy().load().type(Settings.class).first().now();
 
-		String APIKEY = "***REMOVED***";
+		String APIKEY = APIKEYS.veeqoApi;
 
 		Client client = ClientBuilder.newClient();
 		javax.ws.rs.core.Response veeqoresponse = client.target("https://api.veeqo.com/orders?page_size=25&since_id="+s.lastId+"&tags=B%20%26%20Q")
