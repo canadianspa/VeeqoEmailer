@@ -19,7 +19,7 @@ public final class Texter {
 			 phone = "07876683967";
 			 Message message = Message.creator(
 			     new PhoneNumber(phone),  // To number
-			     new PhoneNumber("+15559994321"),  // From number
+			     new PhoneNumber("+441462600061"),  // From number
 			     "Hello " + name + ", your order of from Canadian Spa Company for:" + li.toString() + " has been recieved"                // SMS body
 			 ).create();
 
@@ -38,7 +38,7 @@ public final class Texter {
 			 phone = "07876683967";
 			 Message message = Message.creator(
 			     new PhoneNumber(phone),  // To number
-			     new PhoneNumber("+15559994321"),  // From number
+			     new PhoneNumber("+441462600061"),  // From number
 			     "Hello " + name + ", your order of from Canadian Spa Company has been shipped, you can monitor the progress with:" + trackingURL    // SMS body
 			 ).create();
 
