@@ -40,7 +40,7 @@ public class FindUpdates extends HttpServlet {
 		Allocations[] allocations;
 		boolean allocated_completely;
 		DeliverTo deliver_to;
-
+		String status;
 	}
 
 	public class DeliverTo
@@ -90,10 +90,6 @@ public class FindUpdates extends HttpServlet {
 
 
 		ObjectifyService.register(HomebaseOrder.class); 
-		ObjectifyService.register(Settings.class); 
-
-		Settings s = ObjectifyService.ofy().load().type(Settings.class).first().now();
-
 
 		Query<HomebaseOrder> q = ObjectifyService.ofy().load().type(HomebaseOrder.class);
 
@@ -104,8 +100,16 @@ public class FindUpdates extends HttpServlet {
 
 		for(HomebaseOrder h: hos0)
 		{
+			
 			try {
 				Order o = idToClass(h.id);
+				
+				if(o.status.equals("cancelled"))
+				{
+					throw new Exception("cancelled");
+				}
+			
+				
 				if(o.allocated_completely)
 				{
 					h.stage = 1;
@@ -145,10 +149,8 @@ public class FindUpdates extends HttpServlet {
 				h.allocationsUsed = o.allocations.length;
 				ObjectifyService.ofy().save().entity(h).now();
 			} catch (Exception e) {
-				  Logger log = Logger.getLogger(FindUpdates.class.getName());
-				  log.info("Deleted:" + h.id);
-
-				ObjectifyService.ofy().delete().entity(h).now();
+				  h.stage = 2;
+				  ObjectifyService.ofy().save().entity(h).now();
 			}
 
 			

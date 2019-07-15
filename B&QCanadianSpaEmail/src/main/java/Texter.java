@@ -20,7 +20,8 @@ public final class Texter {
 			 Message message = Message.creator(
 			     new PhoneNumber(phone),  // To number
 			     new PhoneNumber("+441462600061"),  // From number
-			     "Hello " + name + ", your order of from Canadian Spa Company for:" + li.toString() + " has been recieved"                // SMS body
+			     "Hello " + name + ", your order has been reciveved at Canadian Spa Company. Your order is " 
+			    		 + li.toString() + " and we will deliver to " + a.toString() + ". Please call 01293 824094, if any of the details is wrong."// SMS body
 			 ).create();
 
 			 System.out.println(message.getSid());
@@ -39,7 +40,7 @@ public final class Texter {
 			 Message message = Message.creator(
 			     new PhoneNumber(phone),  // To number
 			     new PhoneNumber("+441462600061"),  // From number
-			     "Hello " + name + ", your order of from Canadian Spa Company has been shipped, you can monitor the progress with:" + trackingURL    // SMS body
+			     "Hello " + name + ", your order from Canadian Spa Company has been shipped, you can monitor the progress with:" + trackingURL    // SMS body
 			 ).create();
 
 			 System.out.println(message.getSid());

@@ -24,7 +24,7 @@ public class LineItems {
 		String output = "";
 		for(int i = 0; i < productTitles.length; i ++ )
 		{
-			output += productTitles[i] + ": " + quantities[i] + ",\r\n";
+			output += productTitles[i] + ": " + quantities[i] + ",   ";
 		}
 		return output;
 	}

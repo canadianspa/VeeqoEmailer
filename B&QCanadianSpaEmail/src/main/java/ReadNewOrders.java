@@ -62,7 +62,7 @@ public class ReadNewOrders extends HttpServlet {
 		String product_title;
 	}
 
-
+	//stage 0 orders still need to be shipped, stage 1 all orders shipped, stage 2 problemo
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
