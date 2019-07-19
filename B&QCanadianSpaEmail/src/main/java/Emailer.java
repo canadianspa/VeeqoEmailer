@@ -13,9 +13,10 @@ import entities.LineItems;
 
 public final class Emailer {
 	
+	public static String apikey = APIKEYS.sendGridApi;
+	
 	public static void orderRecieved(String name, String email, LineItems li, Address a)
 	{
-		String apikey = APIKEYS.sendGridApi;
 		Email from = new Email("noreply@canadianspacompany.com");
 		String subject = "";
 		Email to = new Email(email);
@@ -50,7 +51,7 @@ public final class Emailer {
 	
 	public static void orderShipped(String name, String email, LineItems li,Address a, String trackingURL, String trackingNumber, int stage)
 	{
-		String apikey = "***REMOVED***";
+		
 		Email from = new Email("noreply@canadianspacompany.com");
 		String subject = "";
 		Email to = new Email(email);
@@ -85,8 +86,6 @@ public final class Emailer {
 		}
 	}
 	
-	public static void holder(){
-		
-	}
+
 
 }

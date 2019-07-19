@@ -96,7 +96,7 @@ public class ReadNewOrders extends HttpServlet {
 			{
 		        Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
 		        Matcher matcher = pattern.matcher(o.customer_note.text);
-		        String email = "";
+		        String email = " ";
 		        if(matcher.find())
 		        {
 		        	email  = matcher.group();

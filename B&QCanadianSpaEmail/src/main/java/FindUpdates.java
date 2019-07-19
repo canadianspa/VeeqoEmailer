@@ -55,7 +55,7 @@ public class FindUpdates extends HttpServlet {
 		String zip;
 		String phone;
 	}
-	
+
 	public class Allocations{
 		Shipment shipment;
 		LineItem[] line_items;
@@ -70,14 +70,14 @@ public class FindUpdates extends HttpServlet {
 	public class TrackingNumber{
 		String tracking_number;
 	}
-	
+
 	public class LineItem
 	{
 		int quantity;
 		Sellable sellable;
-		
+
 	}
-	
+
 	public class Sellable
 	{
 		String product_title;
@@ -96,34 +96,34 @@ public class FindUpdates extends HttpServlet {
 		//get all the orders not fully allocated
 		Query<HomebaseOrder> q0 = q.filter("stage", 0);
 		List<HomebaseOrder> hos0 = q0.list();	
-	
+
 
 		for(HomebaseOrder h: hos0)
 		{
-			
+
 			try {
 				Order o = idToClass(h.id);
-				
+
 				if(o.status.equals("cancelled"))
 				{
 					throw new Exception("cancelled");
 				}
-			
-				
+
+
 				if(o.allocated_completely)
 				{
 					h.stage = 1;
 
 				}
-				
-				
+
+
 				if(o.allocations.length > h.allocationsUsed)
 				{
 					for(int i = o.allocations.length - 1; i >= h.allocationsUsed; i --)
 					{
-						
+
 						int num = o.allocations[i].line_items.length;
-						
+
 						String[] productTitles = new String[num] ;
 						int[] quantities = new int[num];
 
@@ -132,30 +132,37 @@ public class FindUpdates extends HttpServlet {
 							productTitles[p] = o.allocations[i].line_items[p].sellable.product_title;
 							quantities[p] = o.allocations[i].line_items[p].quantity; 
 						}
-						
+
 						LineItems li = new LineItems(productTitles,quantities);
-						
+
 						DeliverTo dt = o.deliver_to;
 						Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 						String name = dt.first_name + " " +  dt.last_name;
 
-						
-						
-						Emailer.orderShipped(name, h.customerEmail, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, h.stage);
-						Texter.orderShipped(name, h.customerPhone, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, h.stage);
+
+						if(h.customerEmail != " ")
+						{
+							Emailer.orderShipped(name, h.customerEmail, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, h.stage);
+						}
+						if(h.customerPhone.length() > 3)
+						{
+							Texter.orderShipped(name, h.customerPhone, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, h.stage);
+						}
 					}
+
+
 				}
-				
+
 				h.allocationsUsed = o.allocations.length;
 				ObjectifyService.ofy().save().entity(h).now();
 			} catch (Exception e) {
-				  h.stage = 2;
-				  ObjectifyService.ofy().save().entity(h).now();
+				h.stage = 2;
+				ObjectifyService.ofy().save().entity(h).now();
 			}
 
-			
-			
-			
+
+
+
 		}
 
 		response.getWriter().println(hos0.size());
@@ -166,7 +173,7 @@ public class FindUpdates extends HttpServlet {
 	{
 		String APIKEY = APIKEYS.veeqoApi;
 
-		
+
 		Client client = ClientBuilder.newClient();
 		javax.ws.rs.core.Response response = client.target("https://api.veeqo.com/orders/" + orderId)
 				.request(MediaType.APPLICATION_JSON_TYPE)
@@ -181,8 +188,8 @@ public class FindUpdates extends HttpServlet {
 
 		return g.fromJson(body, Order.class);
 	}
-	
-	
-	
+
+
+
 
 }

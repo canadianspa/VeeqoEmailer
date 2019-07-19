@@ -15,8 +15,6 @@ public final class Texter {
 		 try {
 			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-
-			 phone = "07876683967";
 			 Message message = Message.creator(
 			     new PhoneNumber(phone),  // To number
 			     new PhoneNumber("+441462600061"),  // From number
@@ -36,7 +34,6 @@ public final class Texter {
 	{
 		try {
 			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-			 phone = "07876683967";
 			 Message message = Message.creator(
 			     new PhoneNumber(phone),  // To number
 			     new PhoneNumber("+441462600061"),  // From number

@@ -55,9 +55,9 @@ public class NewOrderFinder {
 
 	public static void main(String[] args) throws IOException {
 
-		int orderId= 30375170;
+		int orderId= 31545013;
 
-		String APIKEY = "***REMOVED***";
+		String APIKEY = "";
 
 		Client client = ClientBuilder.newClient();
 		Response response = client.target("https://api.veeqo.com/orders/" + orderId)
@@ -101,8 +101,12 @@ public class NewOrderFinder {
 		String name = dt.first_name + " " +  dt.last_name;
 		Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 		
-		System.out.println("hi");
-		Emailer.orderRecieved(name,ho.customerEmail, li,a);
+		System.out.println(ho.id);
+		System.out.println(ho.customerEmail);
+		System.out.println(ho.customerPhone);
+
+
+		//Emailer.orderRecieved(name,ho.customerEmail, li,a);
 		
 	}
 }
