@@ -112,7 +112,7 @@ public class FindUpdates extends HttpServlet {
 				}
 				
 
-				if(o.allocated_completely)
+				if(shippedCompletly(o.allocations,o.allocated_completely))
 				{
 					h.stage = 1;
 
@@ -173,7 +173,20 @@ public class FindUpdates extends HttpServlet {
 
 	}
 	
-
+	public boolean shippedCompletly(Allocations[] allocations, boolean allocatedCompletly)
+	{
+		int numShips = findShipments(allocations);
+		
+		if(allocatedCompletly & numShips == allocations.length)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public int findShipments(Allocations[] allocations)
 	{
 		int numberOfShips = 0;
