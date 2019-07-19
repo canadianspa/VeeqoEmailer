@@ -41,6 +41,8 @@ public class FindUpdates extends HttpServlet {
 		boolean allocated_completely;
 		DeliverTo deliver_to;
 		String status;
+		
+		
 	}
 
 	public class DeliverTo
@@ -108,18 +110,20 @@ public class FindUpdates extends HttpServlet {
 				{
 					throw new Exception("cancelled");
 				}
-
+				
 
 				if(o.allocated_completely)
 				{
 					h.stage = 1;
 
 				}
+				
+				
+				int numberOfShips = findShipments(o.allocations);
 
-
-				if(o.allocations.length > h.allocationsUsed)
+				if(numberOfShips > h.allocationsUsed)
 				{
-					for(int i = o.allocations.length - 1; i >= h.allocationsUsed; i --)
+					for(int i = numberOfShips - 1; i >= h.allocationsUsed; i --)
 					{
 
 						int num = o.allocations[i].line_items.length;
@@ -153,7 +157,7 @@ public class FindUpdates extends HttpServlet {
 
 				}
 
-				h.allocationsUsed = o.allocations.length;
+				h.allocationsUsed = numberOfShips;
 				ObjectifyService.ofy().save().entity(h).now();
 			} catch (Exception e) {
 				h.stage = 2;
@@ -167,6 +171,21 @@ public class FindUpdates extends HttpServlet {
 
 		response.getWriter().println(hos0.size());
 
+	}
+	
+
+	public int findShipments(Allocations[] allocations)
+	{
+		int numberOfShips = 0;
+		for(Allocations a: allocations)
+		{
+			if(a.shipment != null)
+			{
+				numberOfShips += 1;
+			}
+		}
+		
+		return numberOfShips;
 	}
 
 	public Order idToClass(Long orderId)
