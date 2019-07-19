@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 
+import test.NewOrderFinder.Order;
+
 
 
 
@@ -18,19 +20,12 @@ import com.google.gson.Gson;
 
 public class NewOrder {
 
-
 	public class Order{
 		int id;
-		CustomerNote customer_note;
-		DeliverTo deliver_to;
-		LineItem[] line_items;
+		Allocations[] allocations;
 		boolean allocated_completely;
-
-	}
-
-	public class CustomerNote
-	{
-		String text;
+		DeliverTo deliver_to;
+		String status;
 	}
 
 	public class DeliverTo
@@ -44,6 +39,21 @@ public class NewOrder {
 		String state;
 		String zip;
 		String phone;
+	}
+
+	public class Allocations{
+		Shipment shipment;
+		LineItem[] line_items;
+	}
+
+	public class Shipment{
+		int id;
+		TrackingNumber tracking_number;
+		String tracking_url;
+	}
+
+	public class TrackingNumber{
+		String tracking_number;
 	}
 
 	public class LineItem
@@ -60,14 +70,14 @@ public class NewOrder {
 
 
 
-
 	public static void main(String[] args) throws IOException {
-		int lastId= 30375175;
 
-		String APIKEY = "***REMOVED***";
+		int orderId= 30895701;
+
+		String APIKEY = "";
 
 		Client client = ClientBuilder.newClient();
-		Response response = client.target("https://api.veeqo.com/orders?page_size=25&since_id="+lastId+"&tags=B%20%26%20Q")
+		Response response = client.target("https://api.veeqo.com/orders/" + orderId)
 				.request(MediaType.APPLICATION_JSON_TYPE)
 				.header("x-api-key", APIKEY)
 				.get();
@@ -76,50 +86,58 @@ public class NewOrder {
 
 		String body = response.readEntity(String.class);
 		Gson g = new Gson();
+		Order o = g.fromJson(body, Order.class);
 
-
-		Order[] orders = g.fromJson(body, Order[].class);
-
-
-		if(orders.length > 0)
+		
+		
+		int numberOfShips = findShipments(o.allocations);
+System.out.println(numberOfShips);
+	
+		for(int i = numberOfShips - 1; i >= 0; i --)
 		{
-			for(Order o: orders)
+			System.out.println(numberOfShips);
+			int num = o.allocations[i].line_items.length;
+
+			String[] productTitles = new String[num] ;
+			int[] quantities = new int[num];
+
+			for(int p = 0; p < num; p ++)
 			{
-				Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
-				Matcher matcher = pattern.matcher(o.customer_note.text);
-				String email = "";
-				if(matcher.find())
-				{
-					email  = matcher.group();
-				}
-				Long id = (long) o.id;
-				String phoneNum = o.deliver_to.phone;
-
-				int num = o.line_items.length;
-
-				String[] productTitles = new String[num] ;
-				int[] quantities = new int[num];
-
-				for(int i = 0; i < num; i ++)
-				{
-					productTitles[i] = o.line_items[i].sellable.product_title;
-					quantities[i] = o.line_items[i].quantity; 
-				}
-
-				LineItems li = new LineItems(productTitles,quantities);
-
-				HomebaseOrder ho = new HomebaseOrder(id,email,phoneNum);
-				
-				if(o.allocated_completely)
-				{
-					ho.stage = 1;
-				}
-				System.out.println(ho.stage);
-
-
+				productTitles[p] = o.allocations[i].line_items[p].sellable.product_title;
+				quantities[p] = o.allocations[i].line_items[p].quantity; 
 			}
+
+			LineItems li = new LineItems(productTitles,quantities);
+
+			DeliverTo dt = o.deliver_to;
+			Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
+			String name = dt.first_name + " " +  dt.last_name;
+
+
+			System.out.println(o.allocations[i].shipment.tracking_url);
+
+			Emailer.orderShipped(name, " ", li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, 0);
+
+
+			Texter.orderShipped(name, " ", li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, 0);
+
 		}
 
 
+	}		
+
+	public static int findShipments(Allocations[] allocations)
+	{
+		int numberOfShips = 0;
+		for(Allocations a: allocations)
+		{
+			if(a.shipment != null)
+			{
+				numberOfShips += 1;
+			}
+		}
+		
+		return numberOfShips;
 	}
 }
+

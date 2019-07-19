@@ -1,7 +1,6 @@
 package test;
-import java.io.IOException;
-import java.util.Map;
 
+import java.io.IOException;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -9,18 +8,17 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Personalization;
-
 
 
 public final class Emailer {
-
+	
+	public static String apikey = APIKEYS.sendGridApi;
+	
 	public static void orderRecieved(String name, String email, LineItems li, Address a)
 	{
-		String apikey = "***REMOVED***";
 		Email from = new Email("noreply@canadianspacompany.com");
 		String subject = "";
-		Email to = new Email("***REMOVED***");
+		Email to = new Email(email);
 		Content content = new Content("text/plain", "a");
 		Mail mail = new Mail(from, subject, to, content);
 		
@@ -49,14 +47,13 @@ public final class Emailer {
 
 		}
 	}
-
-
+	
 	public static void orderShipped(String name, String email, LineItems li,Address a, String trackingURL, String trackingNumber, int stage)
 	{
-		String apikey = "***REMOVED***";
+		
 		Email from = new Email("noreply@canadianspacompany.com");
 		String subject = "";
-		Email to = new Email("***REMOVED***");
+		Email to = new Email(email);
 		Content content = new Content("text/plain", "a");
 		Mail mail = new Mail(from, subject, to, content);
 		
@@ -87,9 +84,7 @@ public final class Emailer {
 
 		}
 	}
+	
 
-	public static void holder(){
-
-	}
 
 }
