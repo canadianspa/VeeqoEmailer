@@ -30,7 +30,7 @@ public final class Texter {
 
 	}
 	
-	public static void orderShipped(String name, String phone, LineItems li,Address a,String trackingURL, String trackingNumber, int stage)
+	public static void orderShipped(String name, String phone, LineItems li,Address a,String trackingURL, String trackingNumber)
 	{
 		try {
 			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);

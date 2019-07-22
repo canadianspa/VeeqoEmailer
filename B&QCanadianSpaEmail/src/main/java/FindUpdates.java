@@ -24,7 +24,7 @@ import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
 import entities.Address;
-import entities.HomebaseOrder;
+import entities.VeeqoOrder;
 import entities.LineItems;
 import entities.Settings;
 
@@ -91,16 +91,16 @@ public class FindUpdates extends HttpServlet {
 
 
 
-		ObjectifyService.register(HomebaseOrder.class); 
+		ObjectifyService.register(VeeqoOrder.class); 
 
-		Query<HomebaseOrder> q = ObjectifyService.ofy().load().type(HomebaseOrder.class);
+		Query<VeeqoOrder> q = ObjectifyService.ofy().load().type(VeeqoOrder.class);
 
 		//get all the orders not fully allocated
-		Query<HomebaseOrder> q0 = q.filter("stage", 0);
-		List<HomebaseOrder> hos0 = q0.list();	
+		Query<VeeqoOrder> q0 = q.filter("stage", 0);
+		List<VeeqoOrder> hos0 = q0.list();	
 
 
-		for(HomebaseOrder h: hos0)
+		for(VeeqoOrder h: hos0)
 		{
 
 			try {
@@ -146,11 +146,13 @@ public class FindUpdates extends HttpServlet {
 
 						if(h.customerEmail != " ")
 						{
-							Emailer.orderShipped(name, h.customerEmail, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, h.stage);
+							Emailer.orderShipped(name, h.customerEmail, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
+							Emailer.orderShipped(name, "jake.labelle@hotmail.co.uk", li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
 						}
 						if(h.customerPhone.length() > 3)
 						{
-							Texter.orderShipped(name, h.customerPhone, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number, h.stage);
+							Texter.orderShipped(name, h.customerPhone, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
+							Texter.orderShipped(name, "07876683967", li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
 						}
 					}
 

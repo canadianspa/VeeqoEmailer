@@ -22,7 +22,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
-import entities.HomebaseOrder;
+import entities.VeeqoOrder;
 import entities.LineItems;
 import entities.Settings;
 
@@ -47,7 +47,7 @@ public class SetSettings extends HttpServlet {
 		
 		ObjectifyService.ofy().delete().entity(olds);
 
-		Settings news = new Settings(0L,0L);
+		Settings news = new Settings(31462383L,0L);
 
 		ObjectifyService.ofy().save().entity(news);
 		response.getWriter().println("Settings Reset");

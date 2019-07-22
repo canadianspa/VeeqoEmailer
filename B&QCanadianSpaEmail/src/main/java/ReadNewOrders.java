@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import com.googlecode.objectify.ObjectifyService;
 
 import entities.Address;
-import entities.HomebaseOrder;
+import entities.VeeqoOrder;
 import entities.LineItems;
 import entities.Settings;
 
@@ -68,7 +68,7 @@ public class ReadNewOrders extends HttpServlet {
 			throws IOException {
 
 
-		ObjectifyService.register(HomebaseOrder.class); 
+		ObjectifyService.register(VeeqoOrder.class); 
 		ObjectifyService.register(Settings.class); 
 
 
@@ -118,7 +118,7 @@ public class ReadNewOrders extends HttpServlet {
 				
 				LineItems li = new LineItems(productTitles,quantities);
 				
-				HomebaseOrder ho = new HomebaseOrder(id,email,phoneNum);
+				VeeqoOrder ho = new VeeqoOrder(id,email,phoneNum);
 				
 				ObjectifyService.ofy().save().entity(ho).now();
 
@@ -126,7 +126,10 @@ public class ReadNewOrders extends HttpServlet {
 				Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 				String name = dt.first_name + " " +  dt.last_name;
 				Emailer.orderRecieved(name, ho.customerEmail, li,a);
+				Emailer.orderRecieved(name, "jake.labelle@hotmail.co.uk", li,a);
 				Texter.orderRecieved(name, ho.customerPhone, li,a);
+				Texter.orderRecieved(name, "07876683967", li,a);
+
 				
 			}
 

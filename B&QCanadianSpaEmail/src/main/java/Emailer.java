@@ -49,7 +49,7 @@ public final class Emailer {
 		}
 	}
 	
-	public static void orderShipped(String name, String email, LineItems li,Address a, String trackingURL, String trackingNumber, int stage)
+	public static void orderShipped(String name, String email, LineItems li,Address a, String trackingURL, String trackingNumber)
 	{
 		
 		Email from = new Email("noreply@canadianspacompany.com");

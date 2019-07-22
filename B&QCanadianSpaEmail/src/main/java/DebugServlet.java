@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 
-import entities.HomebaseOrder;
+import entities.VeeqoOrder;
 
 @WebServlet(
 		name = "DebugServlet",
@@ -21,18 +21,18 @@ public class DebugServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
 
-		ObjectifyService.register(HomebaseOrder.class); 
+		ObjectifyService.register(VeeqoOrder.class); 
 
-		Query<HomebaseOrder> q = ObjectifyService.ofy().load().type(HomebaseOrder.class);
+		Query<VeeqoOrder> q = ObjectifyService.ofy().load().type(VeeqoOrder.class);
 
 		//get all the orders not fully allocated
-		Query<HomebaseOrder> q0 = q.filter("stage", 0);
-		List<HomebaseOrder> hos0 = q0.list();	
+		Query<VeeqoOrder> q0 = q.filter("stage", 0);
+		List<VeeqoOrder> hos0 = q0.list();	
 
 
 		response.getWriter().println("Stage 0");
 
-		for(HomebaseOrder ho: hos0)
+		for(VeeqoOrder ho: hos0)
 		{
 			response.getWriter().println(ho.id);
 		}
@@ -40,13 +40,13 @@ public class DebugServlet extends HttpServlet {
 		response.getWriter().println("<br />");
 
 		//get all the orders fully allocated
-		Query<HomebaseOrder> q1 = q.filter("stage", 1);
-		List<HomebaseOrder> hos1 = q1.list();	
+		Query<VeeqoOrder> q1 = q.filter("stage", 1);
+		List<VeeqoOrder> hos1 = q1.list();	
 
 
 		response.getWriter().println("Stage 1");
 
-		for(HomebaseOrder ho: hos1)
+		for(VeeqoOrder ho: hos1)
 		{
 			response.getWriter().println(ho.id);
 		}
@@ -54,13 +54,13 @@ public class DebugServlet extends HttpServlet {
 		response.getWriter().println("<br />");
 
 		//get all the orders removed
-		Query<HomebaseOrder> q2 = q.filter("stage", 2);
-		List<HomebaseOrder> hos2 = q2.list();	
+		Query<VeeqoOrder> q2 = q.filter("stage", 2);
+		List<VeeqoOrder> hos2 = q2.list();	
 
 
 		response.getWriter().println("Stage 2");
 
-		for(HomebaseOrder ho: hos2)
+		for(VeeqoOrder ho: hos2)
 		{
 			response.getWriter().println(ho.id);
 		}

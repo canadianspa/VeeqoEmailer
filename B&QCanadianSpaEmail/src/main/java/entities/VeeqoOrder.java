@@ -5,7 +5,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class HomebaseOrder {
+public class VeeqoOrder {
 	
 	@Id
 	public Long id;
@@ -16,7 +16,7 @@ public class HomebaseOrder {
 	
 	
 
-	public HomebaseOrder(Long id, String customerEmail, String customerPhone) {
+	public VeeqoOrder(Long id, String customerEmail, String customerPhone) {
 		super();
 		this.id = id;
 		this.stage = 0;
@@ -27,7 +27,7 @@ public class HomebaseOrder {
 
 
 
-	public HomebaseOrder() {
+	public VeeqoOrder() {
 	}
 	
 
