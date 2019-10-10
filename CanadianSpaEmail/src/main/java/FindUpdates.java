@@ -148,7 +148,7 @@ public class FindUpdates extends HttpServlet {
 						{
 							Emailer.orderShipped(name, h.customerEmail, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
 						}
-						if(h.customerPhone.length() > 3)
+						if(h.customerPhone.length() > 9)
 						{
 							Texter.orderShipped(name, h.customerPhone, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
 						}
