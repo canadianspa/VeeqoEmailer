@@ -80,7 +80,7 @@ public class ReadNewOrders extends HttpServlet {
 
 		Settings s = ObjectifyService.ofy().load().type(Settings.class).first().now();
 
-		long newLast = 0L;
+		long newLast = s.lastId;
 		for(String tag: tags)
 		{
 			long hold = readNew(tag, s.lastId);
@@ -153,8 +153,8 @@ public class ReadNewOrders extends HttpServlet {
 				DeliverTo dt = o.deliver_to;
 				Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 				String name = dt.first_name + " " +  dt.last_name;
-				Emailer.orderRecieved(name, ho.customerEmail, li,a);
-				Texter.orderRecieved(name, ho.customerPhone, li,a);
+				//Emailer.orderRecieved(name, ho.customerEmail, li,a);
+				//Texter.orderRecieved(name, ho.customerPhone, li,a);
 
 			}
 			return (long) orders[0].id;
