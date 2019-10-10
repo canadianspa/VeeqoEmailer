@@ -126,9 +126,7 @@ public class ReadNewOrders extends HttpServlet {
 				Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 				String name = dt.first_name + " " +  dt.last_name;
 				Emailer.orderRecieved(name, ho.customerEmail, li,a);
-				Emailer.orderRecieved(name, "jake.labelle@hotmail.co.uk", li,a);
 				Texter.orderRecieved(name, ho.customerPhone, li,a);
-				Texter.orderRecieved(name, "07876683967", li,a);
 
 				
 			}

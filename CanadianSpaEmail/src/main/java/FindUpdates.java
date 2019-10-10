@@ -147,12 +147,10 @@ public class FindUpdates extends HttpServlet {
 						if(h.customerEmail != " ")
 						{
 							Emailer.orderShipped(name, h.customerEmail, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
-							Emailer.orderShipped(name, "jake.labelle@hotmail.co.uk", li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
 						}
 						if(h.customerPhone.length() > 3)
 						{
 							Texter.orderShipped(name, h.customerPhone, li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
-							Texter.orderShipped(name, "07876683967", li,a,o.allocations[i].shipment.tracking_url,o.allocations[i].shipment.tracking_number.tracking_number);
 						}
 					}
 
