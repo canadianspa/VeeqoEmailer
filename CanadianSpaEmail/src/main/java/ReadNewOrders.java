@@ -105,7 +105,7 @@ public class ReadNewOrders extends HttpServlet {
 		String APIKEY = APIKEYS.veeqoApi;
 
 		Client client = ClientBuilder.newClient();
-		javax.ws.rs.core.Response veeqoresponse = client.target("https://api.veeqo.com/orders?page_size=25&since_id="+s.lastId+"&tags=B%20%26%20Q")
+		javax.ws.rs.core.Response veeqoresponse = client.target("https://api.veeqo.com/orders?page_size=25&since_id="+s.lastId+"&tags="+tag)
 				.request(MediaType.APPLICATION_JSON_TYPE)
 				.header("x-api-key", APIKEY)
 				.get();
@@ -153,8 +153,8 @@ public class ReadNewOrders extends HttpServlet {
 				DeliverTo dt = o.deliver_to;
 				Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 				String name = dt.first_name + " " +  dt.last_name;
-				//Emailer.orderRecieved(name, ho.customerEmail, li,a);
-				//Texter.orderRecieved(name, ho.customerPhone, li,a);
+				Emailer.orderRecieved(name, ho.customerEmail, li,a);
+				Texter.orderRecieved(name, ho.customerPhone, li,a);
 
 			}
 			return (long) orders[0].id;
