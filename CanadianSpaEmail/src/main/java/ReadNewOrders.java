@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +27,9 @@ import entities.Settings;
 public class ReadNewOrders extends HttpServlet {
 
 
+	final ArrayList<String> tags = new ArrayList<String>(Arrays.asList("B%20%26%20Q","HOMEBASE","ARGOS"));
+
+
 	public class Order{
 		int id;
 		CustomerNote customer_note;
@@ -49,14 +54,14 @@ public class ReadNewOrders extends HttpServlet {
 		String zip;
 		String phone;
 	}
-	
+
 	public class LineItem
 	{
 		int quantity;
 		Sellable sellable;
-		
+
 	}
-	
+
 	public class Sellable
 	{
 		String product_title;
@@ -72,12 +77,35 @@ public class ReadNewOrders extends HttpServlet {
 		ObjectifyService.register(Settings.class); 
 
 
+
+		Settings s = ObjectifyService.ofy().load().type(Settings.class).first().now();
+
+		long newLast = s.lastId;
+		for(String tag: tags)
+		{
+			long hold = readNew(tag, s.lastId);
+			//find the last id of all the tags
+			newLast = (newLast > hold) ? newLast: hold;
+		}
+
+		s.lastId = newLast;
+		ObjectifyService.ofy().save().entity(s).now();
+		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().println(s.lastId);
+
+
+	}
+
+
+	public long readNew(String tag, double lastId)
+	{
 		Settings s = ObjectifyService.ofy().load().type(Settings.class).first().now();
 
 		String APIKEY = APIKEYS.veeqoApi;
 
 		Client client = ClientBuilder.newClient();
-		javax.ws.rs.core.Response veeqoresponse = client.target("https://api.veeqo.com/orders?page_size=25&since_id="+s.lastId+"&tags=B%20%26%20Q")
+		javax.ws.rs.core.Response veeqoresponse = client.target("https://api.veeqo.com/orders?page_size=25&since_id="+s.lastId+"&tags="+tag)
 				.request(MediaType.APPLICATION_JSON_TYPE)
 				.header("x-api-key", APIKEY)
 				.get();
@@ -94,19 +122,19 @@ public class ReadNewOrders extends HttpServlet {
 		{
 			for(Order o: orders)
 			{
-		        Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
-		        Matcher matcher = pattern.matcher(o.customer_note.text);
-		        String email = " ";
-		        if(matcher.find())
-		        {
-		        	email  = matcher.group();
-		        }
-		      
+				Pattern pattern = Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
+				Matcher matcher = pattern.matcher(o.customer_note.text);
+				String email = " ";
+				if(matcher.find())
+				{
+					email  = matcher.group();
+				}
+
 				Long id = (long) o.id;
 				String phoneNum = o.deliver_to.phone;
-				
+
 				int num = o.line_items.length;
-				
+
 				String[] productTitles = new String[num] ;
 				int[] quantities = new int[num];
 
@@ -115,35 +143,27 @@ public class ReadNewOrders extends HttpServlet {
 					productTitles[i] = o.line_items[i].sellable.product_title;
 					quantities[i] = o.line_items[i].quantity; 
 				}
-				
+
 				LineItems li = new LineItems(productTitles,quantities);
-				
+
 				VeeqoOrder ho = new VeeqoOrder(id,email,phoneNum);
-				
+
 				ObjectifyService.ofy().save().entity(ho).now();
 
 				DeliverTo dt = o.deliver_to;
 				Address a = new Address(dt.first_name,dt.last_name,dt.address1,dt.address2,dt.city,dt.country,dt.state,dt.zip,dt.phone);
 				String name = dt.first_name + " " +  dt.last_name;
 				Emailer.orderRecieved(name, ho.customerEmail, li,a);
-				Emailer.orderRecieved(name, "jake.labelle@hotmail.co.uk", li,a);
 				Texter.orderRecieved(name, ho.customerPhone, li,a);
-				Texter.orderRecieved(name, "07876683967", li,a);
 
-				
 			}
+			return (long) orders[0].id;
 
-			s.lastId = (long) orders[0].id;
-			ObjectifyService.ofy().save().entity(s).now();
+
+
 		}
-
-		response.setContentType("text/plain");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().println(orders.length);
-
-
-
-
-
+		
+		return 0;
 	}
+
 }
